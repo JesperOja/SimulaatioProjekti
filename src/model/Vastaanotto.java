@@ -10,8 +10,6 @@ import framework.Tapahtuma;
 import framework.Tapahtumalista;
 
 public class Vastaanotto extends Palvelupiste{
-	private LinkedList<Asiakas> työntekijät = new LinkedList<Asiakas>();
-	private LinkedList<Tapahtuma> ajat = new LinkedList<Tapahtuma>();
 	
 	
 	public Vastaanotto(Normal generator, Tapahtumalista tapahtumalista, TapahtumanTyyppi tyyppi) {
@@ -19,9 +17,7 @@ public class Vastaanotto extends Palvelupiste{
 		
 	}
 	
-	public LinkedList<Asiakas> getTyöntekijät() {
-		return työntekijät;
-	}
+	
 	@Override
 	public void lisaaJonoon(Asiakas a) {
 		jono.add(a);
@@ -46,8 +42,8 @@ public class Vastaanotto extends Palvelupiste{
 		
 		double palveluaika = generator.sample();
 		
-		tapahtumalista.lisaa(new Tapahtuma(skeduloitavanTapahtumanTyyppi,Kello.getInstance().getAika()+palveluaika));
-		ajat.add(new Tapahtuma(skeduloitavanTapahtumanTyyppi,Kello.getInstance().getAika()+palveluaika));
-	}
+		tapahtumalista.lisaa(new Tapahtuma(skeduloitavanTapahtumanTyyppi,Kello.getInstance().getAika()));
 	
+	}
+
 }	

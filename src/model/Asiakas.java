@@ -47,7 +47,7 @@ public class Asiakas implements Comparable<Asiakas>{
 	
 	public void raportti(){
 		System.out.println( "\nPaketti "+id+ " valmis! ");
-		System.out.println( "Paketti "+id+ " prioriteetti oli " +priority);
+		//System.out.println( "Paketti "+id+ " prioriteetti oli " +priority);
 		System.out.println("Paketti "+id+ " saapui: " +saapumisaika);
 		System.out.println("Paketti "+id+ " poistui: " +poistumisaika);
 		System.out.println("Paketti "+id+ " viipyi: " +(poistumisaika-saapumisaika));
