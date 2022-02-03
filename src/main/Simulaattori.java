@@ -9,7 +9,7 @@ public class Simulaattori {
 	public static void main(String[] args) {
 		Varasto v = new OmaVarasto();
 		
-		v.setSimulointiaika(45);
+		v.setSimulointiaika(500);
 		v.aja();
 		v.tulokset();
 	}

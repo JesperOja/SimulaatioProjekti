@@ -16,6 +16,7 @@ public class Palvelupiste {
 	protected Tapahtumalista tapahtumalista;
 	protected TapahtumanTyyppi skeduloitavanTapahtumanTyyppi;
 	protected final int työntekijäLKM = 5;
+	protected static int tilausNR = 1;
 
 	protected boolean varattu = false;
 
@@ -40,7 +41,7 @@ public class Palvelupiste {
 		tilausJono.add(tilaus);
 	}
 	
-	public Asiakas otaJonosta() { // Poistetaan palvelussa ollut
+	public Asiakas otaJonosta() { 
 		varattu = false;
 		return jono.poll();
 	}
@@ -66,6 +67,14 @@ public class Palvelupiste {
 	
 	public boolean onTilausJonossa() {
 		return tilausJono.size() != 0;
+	}
+	
+	public TapahtumanTyyppi getTyyppi() {
+		return skeduloitavanTapahtumanTyyppi;
+	}
+	
+	public int getTilausNR() {
+		return tilausNR;
 	}
 
 }

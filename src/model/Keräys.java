@@ -9,25 +9,17 @@ import framework.Tapahtuma;
 import framework.Tapahtumalista;
 
 public class Keräys extends Palvelupiste{
-
+	
 	
 	
 	public Keräys(Normal generator, Tapahtumalista tapahtumalista, TapahtumanTyyppi tyyppi) {
 		super(generator, tapahtumalista, tyyppi);
 	}
 
-	public Asiakas[] otaTilausJonosta() {
-		varattu = false;
-		
-		return tilausJono.poll();
-	}
-	public void lisaaTilausJonoon(Asiakas[] tilaus) {
-		tilausJono.add(tilaus);
-	}
-	
 	@Override
 	public void aloitaPalvelu() {
-		System.out.println("Aloitetaan uusi palvelu tilaukselle " + tilausJono.peek().toString());
+		
+		System.out.println("Aloitetaan keräämään tilausta prioriteelilla " + tilausJono.getFirst()[0].getPriority() );
 
 		varattu = true;
 		double palveluaika = generator.sample();

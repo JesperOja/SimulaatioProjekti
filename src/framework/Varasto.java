@@ -9,6 +9,7 @@ public abstract class Varasto {
 	
 	protected Tapahtumalista tapahtumalista;
 	protected Palvelupiste[] palvelupisteet;
+	protected Palvelupiste[] työntekijät;
 	
 	public Varasto() {
 		kello = Kello.getInstance();
@@ -42,10 +43,17 @@ public abstract class Varasto {
 
 	private void yritaCTapahtumat(){
 		for (Palvelupiste p: palvelupisteet){
+			
 			if (!p.onVarattu() && p.onJonossa() || !p.onVarattu() && p.onTilausJonossa()){
 				p.aloitaPalvelu();
 			}
 		}
+		for (Palvelupiste t: työntekijät) {
+			if (!t.onVarattu() && t.onJonossa()) {
+				t.aloitaPalvelu();
+			}
+		}
+		
 	}
 	
 	private double nykyaika(){

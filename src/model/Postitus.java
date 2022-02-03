@@ -25,7 +25,7 @@ public class Postitus extends Palvelupiste{
 	
 	@Override
 	public void aloitaPalvelu() {
-		System.out.println("Aloitetaan uusi palvelu tilaukselle " + tilausJono.peek().toString());
+		System.out.println("Aloitetaan postittaa tilausta prioriteelilla " + tilausJono.getFirst()[0].getPriority());
 
 		varattu = true;
 		double palveluaika = generator.sample();

@@ -11,8 +11,9 @@ public class Asiakas implements Comparable<Asiakas>{
 	private double poistumisaika;
 	private int id;
 	private static int i = 1;
-	private static long sum = 0;
+	private static double sum = 0;
 	private int priority;
+	private static double counter = 0;
 	private Uniform uniform = new Uniform(1, 7);
 	
 	public Asiakas(){
@@ -21,7 +22,8 @@ public class Asiakas implements Comparable<Asiakas>{
 		saapumisaika = Kello.getInstance().getAika();
 		System.out.println("Uusi asiakas nro " + id + " saapui klo "+saapumisaika);
 	}
-
+	
+	
 	public double getPoistumisaika() {
 		return poistumisaika;
 	}
@@ -46,13 +48,14 @@ public class Asiakas implements Comparable<Asiakas>{
 	}
 	
 	public void raportti(){
+		counter++;
 		System.out.println( "\nPaketti "+id+ " valmis! ");
-		//System.out.println( "Paketti "+id+ " prioriteetti oli " +priority);
+		System.out.println( "Paketti "+id+ " prioriteetti oli " +priority);
 		System.out.println("Paketti "+id+ " saapui: " +saapumisaika);
 		System.out.println("Paketti "+id+ " poistui: " +poistumisaika);
 		System.out.println("Paketti "+id+ " viipyi: " +(poistumisaika-saapumisaika));
 		sum += (poistumisaika-saapumisaika);
-		double keskiarvo = sum/id;
+		double keskiarvo = sum/counter;
 		System.out.println("Pakettien läpimenoaikojen keskiarvo tähän asti "+ keskiarvo);
 	}
 
