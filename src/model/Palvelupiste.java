@@ -15,7 +15,7 @@ public class Palvelupiste {
 	protected Normal generator;
 	protected Tapahtumalista tapahtumalista;
 	protected TapahtumanTyyppi skeduloitavanTapahtumanTyyppi;
-	protected final int työntekijäLKM = 5;
+	public static final int työntekijäLKM = 5;
 	protected static int tilausNR = 1;
 
 	protected boolean varattu = false;

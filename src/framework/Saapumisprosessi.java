@@ -1,5 +1,5 @@
 package framework;
-import eduni.distributions.*;
+
 import model.TapahtumanTyyppi;
 public class Saapumisprosessi {
 	

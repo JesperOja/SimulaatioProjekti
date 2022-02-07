@@ -1,8 +1,5 @@
 package model;
 
-import java.util.LinkedList;
-import java.util.PriorityQueue;
-
 import eduni.distributions.Normal;
 import framework.Kello;
 import framework.Tapahtuma;

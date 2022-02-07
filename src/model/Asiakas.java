@@ -3,7 +3,6 @@ package model;
 
 import eduni.distributions.Uniform;
 import framework.Kello;
-import framework.Tapahtuma;
 
 
 public class Asiakas implements Comparable<Asiakas>{

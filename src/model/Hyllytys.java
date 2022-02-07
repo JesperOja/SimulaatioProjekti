@@ -1,9 +1,5 @@
 package model;
 
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.PriorityQueue;
-
 import eduni.distributions.Normal;
 import eduni.distributions.Uniform;
 import framework.Kello;
@@ -12,7 +8,7 @@ import framework.Tapahtumalista;
 
 public class Hyllytys extends Palvelupiste {
 
-	private Uniform uniform = new Uniform(1, 6);
+	private Uniform uniform = new Uniform(1, 7);
 	private Asiakas[] tilausPR1;
 	private Asiakas[] tilausPR2;
 	private Asiakas[] tilausPR3;
@@ -60,16 +56,12 @@ public class Hyllytys extends Palvelupiste {
 			}
 
 			if (counter1 == tilausPR1.length) {
-
-				System.out.println("Tilaus prioriteetillä " + tilausPR1[0].getPriority() + " on valmis kerättäväksi! ");
 				counter1 = 0;
-				varattu = true;
-				double palveluaika = generator.sample();
-				tapahtumalista.lisaa(
-						new Tapahtuma(skeduloitavanTapahtumanTyyppi, Kello.getInstance().getAika() + palveluaika));
-				tilausJono.add(tilausPR1);
+				lisääTilaukseen(tilausPR1);
+
 				tilausPR1 = new Asiakas[(int) uniform.sample()];
 			}
+
 			break;
 		case 2:
 			if (counter2 < tilausPR2.length) {
@@ -78,14 +70,8 @@ public class Hyllytys extends Palvelupiste {
 			}
 
 			if (counter2 == tilausPR2.length) {
-
-				System.out.println("Tilaus prioriteetillä " + tilausPR2[0].getPriority() + " on valmis kerättäväksi! ");
 				counter2 = 0;
-				varattu = true;
-				double palveluaika = generator.sample();
-				tapahtumalista.lisaa(
-						new Tapahtuma(skeduloitavanTapahtumanTyyppi, Kello.getInstance().getAika() + palveluaika));
-				tilausJono.add(tilausPR2);
+				lisääTilaukseen(tilausPR2);
 				tilausPR2 = new Asiakas[(int) uniform.sample()];
 			}
 			break;
@@ -96,14 +82,8 @@ public class Hyllytys extends Palvelupiste {
 			}
 
 			if (counter3 == tilausPR3.length) {
-
-				System.out.println("Tilaus prioriteetillä " + tilausPR3[0].getPriority() + " on valmis kerättäväksi! ");
 				counter3 = 0;
-				varattu = true;
-				double palveluaika = generator.sample();
-				tapahtumalista.lisaa(
-						new Tapahtuma(skeduloitavanTapahtumanTyyppi, Kello.getInstance().getAika() + palveluaika));
-				tilausJono.add(tilausPR3);
+				lisääTilaukseen(tilausPR3);
 				tilausPR3 = new Asiakas[(int) uniform.sample()];
 			}
 			break;
@@ -114,14 +94,8 @@ public class Hyllytys extends Palvelupiste {
 			}
 
 			if (counter4 == tilausPR4.length) {
-
-				System.out.println("Tilaus prioriteetillä " + tilausPR4[0].getPriority() + " on valmis kerättäväksi! ");
 				counter4 = 0;
-				varattu = true;
-				double palveluaika = generator.sample();
-				tapahtumalista.lisaa(
-						new Tapahtuma(skeduloitavanTapahtumanTyyppi, Kello.getInstance().getAika() + palveluaika));
-				tilausJono.add(tilausPR4);
+				lisääTilaukseen(tilausPR4);
 				tilausPR4 = new Asiakas[(int) uniform.sample()];
 			}
 			break;
@@ -132,14 +106,8 @@ public class Hyllytys extends Palvelupiste {
 			}
 
 			if (counter5 == tilausPR5.length) {
-
-				System.out.println("Tilaus prioriteetillä " + tilausPR5[0].getPriority() + " on valmis kerättäväksi! ");
 				counter5 = 0;
-				varattu = true;
-				double palveluaika = generator.sample();
-				tapahtumalista.lisaa(
-						new Tapahtuma(skeduloitavanTapahtumanTyyppi, Kello.getInstance().getAika() + palveluaika));
-				tilausJono.add(tilausPR5);
+				lisääTilaukseen(tilausPR5);
 				tilausPR5 = new Asiakas[(int) uniform.sample()];
 			}
 			break;
@@ -150,35 +118,25 @@ public class Hyllytys extends Palvelupiste {
 			}
 
 			if (counter6 == tilausPR6.length) {
-				System.out.println("Tilaus prioriteetillä " + tilausPR6[0].getPriority() + " on valmis kerättäväksi! ");
+
 				counter6 = 0;
-				varattu = true;
-				double palveluaika = generator.sample();
-				tapahtumalista.lisaa(
-						new Tapahtuma(skeduloitavanTapahtumanTyyppi, Kello.getInstance().getAika() + palveluaika));
-				tilausJono.add(tilausPR6);
+				lisääTilaukseen(tilausPR6);
+
 				tilausPR6 = new Asiakas[(int) uniform.sample()];
 			}
 			break;
 		}
 
 	}
-/*
-	private void lisääTilaukseen(Asiakas[] tilaus, int counter) {
 
-		tilaus[counter] = jono.poll();
+	private void lisääTilaukseen(Asiakas[] tilaus) {
+
+		System.out.println("Tilaus prioriteetillä " + tilaus[0].getPriority() + " on valmis kerättäväksi! ");
+		varattu = true;
+
+		double palveluaika = generator.sample();
+		tapahtumalista.lisaa(new Tapahtuma(skeduloitavanTapahtumanTyyppi, Kello.getInstance().getAika() + palveluaika));
+		tilausJono.add(tilaus);
 	}
-	
-	 * if(counter == tilaus.length) { System.out.println("\n\n   " + counter +
-	 * "   \n\n"); System.out.println("Tilaus prioriteetillä "+
-	 * tilaus[0].getPriority()+" on valmis kerättäväksi! "); counter = 0; varattu =
-	 * true; double palveluaika = generator.sample(); tapahtumalista.lisaa(new
-	 * Tapahtuma(skeduloitavanTapahtumanTyyppi,Kello.getInstance().getAika()+
-	 * palveluaika)); tilausJono.add(tilaus); tilaus = new
-	 * Asiakas[(int)uniform.sample()]; }
-	 * 
-	 * 
-	 * }
-	 */
 
 }

@@ -6,7 +6,6 @@ import framework.Varasto;
 import framework.Kello;
 
 import eduni.distributions.Normal;
-import eduni.distributions.Uniform;
 import framework.Saapumisprosessi;
 
 public class OmaVarasto extends Varasto {
@@ -53,11 +52,18 @@ public class OmaVarasto extends Varasto {
 
 			break;
 		case Vastaanotto:
-			for(Palvelupiste työntekijä: työntekijät) {
-				if(!työntekijä.onVarattu() && palvelupisteet[0].onJonossa()) {
+			int counter = 0;
+			for(int i = 0; i<Palvelupiste.työntekijäLKM; i++) {
+				if(!työntekijät[i].onVarattu() && palvelupisteet[0].onJonossa()) {
 					a = palvelupisteet[0].otaJonosta();
-					työntekijä.lisaaJonoon(a);
+					työntekijät[i].lisaaJonoon(a);
+				}else {
+					counter++;
 				}
+			}
+			if(counter == Palvelupiste.työntekijäLKM) {
+				System.out.println("Jokainen työntekijä on varattu");
+				tapahtumalista.lisaa(new Tapahtuma(TapahtumanTyyppi.Vastaanotto, Kello.getInstance().getAika()+Math.random()));
 			}
 			break;
 		case Työntekijä1:
