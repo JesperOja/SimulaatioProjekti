@@ -1,0 +1,171 @@
+package model;
+
+import framework.Tapahtuma;
+import framework.Varasto;
+
+import framework.Kello;
+import controller.IKontrolleriMtoV;
+import eduni.distributions.Normal;
+import framework.Saapumisprosessi;
+
+public class OmaVarasto extends Varasto {
+
+	private Saapumisprosessi saapumisprosessi;
+	
+
+	public OmaVarasto(IKontrolleriMtoV kontrolleri) {
+		
+		super(kontrolleri); 
+		tyontekijat = new Palvelupiste[8];
+		
+		tyontekijat[0] = new Palvelupiste(new Normal(8,3), tapahtumalista, TapahtumanTyyppi.Tyontekija1);
+		tyontekijat[1] = new Palvelupiste(new Normal(9,4), tapahtumalista, TapahtumanTyyppi.Tyontekija2);
+		tyontekijat[2] = new Palvelupiste(new Normal(7,4), tapahtumalista, TapahtumanTyyppi.Tyontekija3);
+		tyontekijat[3] = new Palvelupiste(new Normal(6,4), tapahtumalista, TapahtumanTyyppi.Tyontekija4);
+		tyontekijat[4] = new Palvelupiste(new Normal(8,5), tapahtumalista, TapahtumanTyyppi.Tyontekija5);
+		tyontekijat[5] = new Palvelupiste(new Normal(10,5), tapahtumalista, TapahtumanTyyppi.Tyontekija6);
+		tyontekijat[6] = new Palvelupiste(new Normal(11,6), tapahtumalista, TapahtumanTyyppi.Tyontekija7);
+		tyontekijat[7] = new Palvelupiste(new Normal(7,5), tapahtumalista, TapahtumanTyyppi.Tyontekija8);
+		
+		palvelupisteet = new Palvelupiste[4];
+
+		palvelupisteet[1] = new Hyllytys(new Normal(10, 3), tapahtumalista, TapahtumanTyyppi.Hyllytys);
+		palvelupisteet[0] = new Vastaanotto(new Normal(5, 2), tapahtumalista, TapahtumanTyyppi.Vastaanotto);
+		palvelupisteet[3] = new Postitus(new Normal(8, 4), tapahtumalista, TapahtumanTyyppi.Postitus);
+		palvelupisteet[2] = new Kerays(new Normal(7, 5), tapahtumalista, TapahtumanTyyppi.Keräily);
+		
+		saapumisprosessi = new Saapumisprosessi(2, tapahtumalista, TapahtumanTyyppi.Saapuminen);
+
+	}
+
+	@Override
+	protected void alustukset() {
+		saapumisprosessi.generoiSeuraava();
+	}
+
+	@Override
+	protected void suoritaTapahtuma(Tapahtuma t) {
+		Asiakas a;
+		Asiakas[] b;
+		switch (t.getTyyppi()) {
+
+		case Saapuminen:
+			palvelupisteet[0].lisaaJonoon(new Asiakas());
+			kontrolleri.visualisoiAsiakasSaapumis();
+			saapumisprosessi.generoiSeuraava();
+			
+
+			break;
+		case Vastaanotto:
+			int counter = 0;
+			for(int i = 0; i<tyontekijaLKM; i++) {
+				if(!tyontekijat[i].onVarattu() && palvelupisteet[0].onJonossa()) {
+					a = palvelupisteet[0].otaJonosta();
+					tyontekijat[i].lisaaJonoon(a);
+				}else {
+					counter++;
+				}
+			}
+			if(counter == tyontekijaLKM) {
+				System.out.println("Kaikki ty�ntekij�t ovat varattuja");
+				tapahtumalista.lisaa(new Tapahtuma(TapahtumanTyyppi.Vastaanotto, Kello.getInstance().getAika()+Math.random()));
+			}
+			break;
+		case Tyontekija1:
+
+			a = tyontekijat[0].otaJonosta();
+			palvelupisteet[1].lisaaJonoon(a);
+			kontrolleri.visualisoiAsiakasPoistoJonosta1();
+			kontrolleri.visualisoiAsiakasHyllytys();
+			break;
+		case Tyontekija2:
+
+			a = tyontekijat[1].otaJonosta();
+			palvelupisteet[1].lisaaJonoon(a);
+			kontrolleri.visualisoiAsiakasPoistoJonosta1();
+			kontrolleri.visualisoiAsiakasHyllytys();
+			break;
+		case Tyontekija3:
+
+			a = tyontekijat[2].otaJonosta();
+			palvelupisteet[1].lisaaJonoon(a);
+			kontrolleri.visualisoiAsiakasPoistoJonosta1();
+			kontrolleri.visualisoiAsiakasHyllytys();
+			break;
+		case Tyontekija4:
+
+			a = tyontekijat[3].otaJonosta();
+			palvelupisteet[1].lisaaJonoon(a);
+			kontrolleri.visualisoiAsiakasPoistoJonosta1();
+			kontrolleri.visualisoiAsiakasHyllytys();
+			break;
+		case Tyontekija5:
+
+			a = tyontekijat[4].otaJonosta();
+			palvelupisteet[1].lisaaJonoon(a);
+			kontrolleri.visualisoiAsiakasPoistoJonosta1();
+			kontrolleri.visualisoiAsiakasHyllytys();
+			break;
+		case Tyontekija6:
+
+			a = tyontekijat[5].otaJonosta();
+			palvelupisteet[1].lisaaJonoon(a);
+			kontrolleri.visualisoiAsiakasPoistoJonosta1();
+			kontrolleri.visualisoiAsiakasHyllytys();
+			break;
+		case Tyontekija7:
+
+			a = tyontekijat[6].otaJonosta();
+			palvelupisteet[1].lisaaJonoon(a);
+			kontrolleri.visualisoiAsiakasPoistoJonosta1();
+			kontrolleri.visualisoiAsiakasHyllytys();
+			break;
+		case Tyontekija8:
+
+			a = tyontekijat[7].otaJonosta();
+			palvelupisteet[1].lisaaJonoon(a);
+			kontrolleri.visualisoiAsiakasPoistoJonosta1();
+			kontrolleri.visualisoiAsiakasHyllytys();
+			break;
+		case Hyllytys:
+			b = palvelupisteet[1].otaTilausJonosta();
+			palvelupisteet[2].lisaaTilausJonoon(b);
+			for (Asiakas asiakas : b) {
+				kontrolleri.visualisoiAsiakasPoistoJonosta2();
+				kontrolleri.visualisoiAsiakasKeräys();
+			}
+				
+			break;
+		case Keräily:
+			b = palvelupisteet[2].otaTilausJonosta();
+			for (Asiakas asiakas : b) {
+				kontrolleri.visualisoiAsiakasPoistoJonosta2();
+				kontrolleri.visualisoiAsiakasKeräys();
+			}
+			palvelupisteet[3].lisaaTilausJonoon(b);
+
+			break;
+		case Postitus:
+			b = palvelupisteet[3].otaTilausJonosta();
+			for (Asiakas asiakas : b) {
+				asiakas.setPoistumisaika(Kello.getInstance().getAika());
+				asiakas.raportti();
+				//Visualisoi asiakkaan poistumisen
+				kontrolleri.visualisoiAsiakasPoistoJonosta3();
+				kontrolleri.visualisoiAsiakasPoistuu(); 
+			}
+		}
+	}
+
+	@Override
+	public void tulokset() {
+		/*
+		System.out.println("\nSimulointi p��ttyi kello " + Kello.getInstance().getAika());
+		System.out.println("Tulokset ... puuttuvat viel�");
+		*/
+		kontrolleri.naytaLoppuaika(Kello.getInstance().getAika());
+	}
+
+	
+
+}

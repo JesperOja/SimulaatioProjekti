@@ -1,0 +1,23 @@
+package view;
+
+
+public interface IVisualisointi {
+
+	public void tyhjennaNaytto();
+	
+	public void pakettiSaapuu();
+	
+	public void pakettiHyllytys();
+	
+	public void pakettiPoistuuJonosta1();
+	
+	public void pakettiKeräys();
+	
+	public void pakettiPoistuuJonosta2();
+	
+	public void pakettiPoistuu();
+	
+	public void pakettiPoistuuJonosta3();
+		
+}
+

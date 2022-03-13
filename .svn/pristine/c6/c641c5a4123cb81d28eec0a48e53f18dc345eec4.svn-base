@@ -1,0 +1,114 @@
+package framework;
+
+import model.OmaVarasto;
+import model.Palvelupiste;
+import controller.IKontrolleriMtoV;
+
+public abstract class Varasto extends Thread implements IVarasto{
+	private double simulointiaika = 0;
+	private long viive = 0;
+	protected static int tyontekijaLKM = 5;
+	private Kello kello;
+	
+	protected Tapahtumalista tapahtumalista;
+	protected Palvelupiste[] palvelupisteet;
+	protected Palvelupiste[] tyontekijat;
+	
+	protected IKontrolleriMtoV kontrolleri;
+	
+	public Varasto(IKontrolleriMtoV kontrolleri) {
+		
+		this.kontrolleri = kontrolleri;
+		
+		kello = Kello.getInstance();
+		
+		tapahtumalista = new Tapahtumalista();
+	}
+	
+	public void setSimulointiaika(double aika) {
+		simulointiaika = aika;
+	}
+	@Override 
+	public void setViive(long viive) {
+		this.viive = viive;
+	}
+	
+	@Override // UUSI 
+	public long getViive() {
+		return viive;
+	}
+	
+	@Override
+	public void setTyontekijaLKM(int lkm) {
+		Varasto.tyontekijaLKM  = lkm;
+	}
+	
+	@Override
+	public void run(){ 
+		alustukset(); 
+		while (simuloidaan()){
+			viive(); // UUSI
+			kello.setAika(nykyaika());
+			suoritaBTapahtumat();
+			yritaCTapahtumat();
+		}
+		tulokset();
+		
+	}
+	
+	/*
+	public void aja() {
+		alustukset();
+		while(simuloidaan()) {
+			System.out.println("\nA-vaihe: kello on " + nykyaika());
+			kello.setAika(nykyaika());
+			
+			System.out.println("\nB-vaihe:");
+			suoritaBTapahtumat();
+			
+			System.out.println("\nC-vaihe:");
+			yritaCTapahtumat();
+		}
+	}
+	*/
+	private void suoritaBTapahtumat(){
+		while (tapahtumalista.getSeuraavanAika() == kello.getAika()){
+			suoritaTapahtuma(tapahtumalista.poista());
+		}
+	}
+
+	private void yritaCTapahtumat(){
+		for (Palvelupiste p: palvelupisteet){
+			
+			if (!p.onVarattu() && p.onJonossa() || !p.onVarattu() && p.onTilausJonossa()){
+				p.aloitaPalvelu();
+			}
+		}
+		for (Palvelupiste t: tyontekijat) {
+			if (!t.onVarattu() && t.onJonossa()) {
+				t.aloitaPalvelu();
+			}
+		}
+		
+	}
+	
+	private double nykyaika(){
+		return tapahtumalista.getSeuraavanAika();
+	}
+	
+	private boolean simuloidaan(){
+		Trace.out(Trace.Level.INFO, "Kello on: " + kello.getAika());
+		return kello.getAika() < simulointiaika;
+	}
+	private void viive() { 
+		Trace.out(Trace.Level.INFO, "Viive " + viive);
+		try {
+			sleep(viive);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+	}
+	protected abstract void alustukset();
+	protected abstract void suoritaTapahtuma(Tapahtuma t);
+	public abstract void tulokset();
+}

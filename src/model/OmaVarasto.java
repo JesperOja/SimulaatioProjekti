@@ -2,44 +2,113 @@ package model;
 
 import framework.Tapahtuma;
 import framework.Varasto;
-
 import framework.Kello;
 
+
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.cfg.Configuration;
+
+import controller.IKontrolleriMtoV;
 import eduni.distributions.Normal;
 import framework.Saapumisprosessi;
 
+/**
+ * OmaVarasto-luokka toimii simulaattorin moottorina. OmaVarasto siirtaa tietoa
+ * kontrolleriin.
+ * 
+ * @author Jesper Oja
+ *
+ */
 public class OmaVarasto extends Varasto {
 
 	private Saapumisprosessi saapumisprosessi;
+	private Asiakas tilastot = new Asiakas();
+	SessionFactory istuntotehdas = null;
+	Session istunto = null;
 
-	public OmaVarasto() {
-		työntekijät = new Palvelupiste[8];
-		
-		työntekijät[0] = new Palvelupiste(new Normal(8,3), tapahtumalista, TapahtumanTyyppi.Työntekijä1);
-		työntekijät[1] = new Palvelupiste(new Normal(9,4), tapahtumalista, TapahtumanTyyppi.Työntekijä2);
-		työntekijät[2] = new Palvelupiste(new Normal(7,4), tapahtumalista, TapahtumanTyyppi.Työntekijä3);
-		työntekijät[3] = new Palvelupiste(new Normal(6,4), tapahtumalista, TapahtumanTyyppi.Työntekijä4);
-		työntekijät[4] = new Palvelupiste(new Normal(8,5), tapahtumalista, TapahtumanTyyppi.Työntekijä5);
-		työntekijät[5] = new Palvelupiste(new Normal(10,5), tapahtumalista, TapahtumanTyyppi.Työntekijä6);
-		työntekijät[6] = new Palvelupiste(new Normal(11,6), tapahtumalista, TapahtumanTyyppi.Työntekijä7);
-		työntekijät[7] = new Palvelupiste(new Normal(7,5), tapahtumalista, TapahtumanTyyppi.Työntekijä8);
-		
+	/**
+	 * OmaVarasto luodaan kontrollerin avulla. Varasto-luokkaan luodaan valmiit
+	 * palvelupisteet, joissa kayttaja pystyy muuttamaan Normal-jakauman arvoja.
+	 * 
+	 * @param kontrolleri on mallin ja kayttoliittyman valikasi.
+	 */
+
+	public OmaVarasto(IKontrolleriMtoV kontrolleri) {
+
+		super(kontrolleri);
+		tyontekijat = new Palvelupiste[8];
 		palvelupisteet = new Palvelupiste[4];
 
-		palvelupisteet[1] = new Hyllytys(new Normal(8, 3), tapahtumalista, TapahtumanTyyppi.Hyllytys);
-		palvelupisteet[0] = new Vastaanotto(new Normal(5, 2), tapahtumalista, TapahtumanTyyppi.Vastaanotto);
-		palvelupisteet[3] = new Postitus(new Normal(9, 3), tapahtumalista, TapahtumanTyyppi.Postitus);
-		palvelupisteet[2] = new Keräys(new Normal(6, 5), tapahtumalista, TapahtumanTyyppi.Keräily);
-		
-		saapumisprosessi = new Saapumisprosessi(2, tapahtumalista, TapahtumanTyyppi.Saapuminen);
+		tyontekijat[0] = new Palvelupiste(new Normal(8, 3), tapahtumalista, TapahtumanTyyppi.Tyontekija1);
+		tyontekijat[1] = new Palvelupiste(new Normal(9, 4), tapahtumalista, TapahtumanTyyppi.Tyontekija2);
+		tyontekijat[2] = new Palvelupiste(new Normal(7, 4), tapahtumalista, TapahtumanTyyppi.Tyontekija3);
+		tyontekijat[3] = new Palvelupiste(new Normal(6, 4), tapahtumalista, TapahtumanTyyppi.Tyontekija4);
+		tyontekijat[4] = new Palvelupiste(new Normal(8, 5), tapahtumalista, TapahtumanTyyppi.Tyontekija5);
+		tyontekijat[5] = new Palvelupiste(new Normal(10, 5), tapahtumalista, TapahtumanTyyppi.Tyontekija6);
+		tyontekijat[6] = new Palvelupiste(new Normal(11, 6), tapahtumalista, TapahtumanTyyppi.Tyontekija7);
+		tyontekijat[7] = new Palvelupiste(new Normal(7, 5), tapahtumalista, TapahtumanTyyppi.Tyontekija8);
 
+		palvelupisteet[0] = new Vastaanotto(new Normal(1, 1), tapahtumalista, TapahtumanTyyppi.Vastaanotto);
+
+		palvelupisteet[1] = new Hyllytys(new Normal(5, 2), tapahtumalista, TapahtumanTyyppi.Hyllytys);
+
+		palvelupisteet[2] = new Kerays(new Normal(8, 4), tapahtumalista, TapahtumanTyyppi.Keräily);
+
+		palvelupisteet[3] = new Postitus(new Normal(7, 5), tapahtumalista, TapahtumanTyyppi.Postitus);
+
+		switch (kontrolleri.palvelupisteet()) {
+		case 0:
+			palvelupisteet[0] = new Vastaanotto(jakauma, tapahtumalista, TapahtumanTyyppi.Vastaanotto);
+			break;
+		case 1:
+			tyontekijat[0] = new Palvelupiste(jakauma, tapahtumalista, TapahtumanTyyppi.Tyontekija1);
+			tyontekijat[1] = new Palvelupiste(jakauma, tapahtumalista, TapahtumanTyyppi.Tyontekija2);
+			tyontekijat[2] = new Palvelupiste(jakauma, tapahtumalista, TapahtumanTyyppi.Tyontekija3);
+			tyontekijat[3] = new Palvelupiste(jakauma, tapahtumalista, TapahtumanTyyppi.Tyontekija4);
+			tyontekijat[4] = new Palvelupiste(jakauma, tapahtumalista, TapahtumanTyyppi.Tyontekija5);
+			tyontekijat[5] = new Palvelupiste(jakauma, tapahtumalista, TapahtumanTyyppi.Tyontekija6);
+			tyontekijat[6] = new Palvelupiste(jakauma, tapahtumalista, TapahtumanTyyppi.Tyontekija7);
+			tyontekijat[7] = new Palvelupiste(jakauma, tapahtumalista, TapahtumanTyyppi.Tyontekija8);
+			break;
+		case 2:
+			palvelupisteet[1] = new Hyllytys(jakauma, tapahtumalista, TapahtumanTyyppi.Hyllytys);
+			break;
+		case 3:
+			palvelupisteet[2] = new Kerays(jakauma, tapahtumalista, TapahtumanTyyppi.Keräily);
+			break;
+		case 4:
+			palvelupisteet[3] = new Postitus(jakauma, tapahtumalista, TapahtumanTyyppi.Postitus);
+			break;
+		}
+
+		saapumisprosessi = new Saapumisprosessi(2, tapahtumalista, TapahtumanTyyppi.Saapuminen);
+		
+		try {
+			istuntotehdas = new Configuration().configure().buildSessionFactory();
+			istunto = istuntotehdas.openSession();
+
+		} catch (Exception e) {
+			System.err.println("Istuntotehtaan luominen ei 	onnistunut.");
+			e.printStackTrace();
+			System.exit(-1);
+		}
 	}
+
+	/**
+	 * Generoi uuden saapumistapahtuman
+	 */
 
 	@Override
 	protected void alustukset() {
 		saapumisprosessi.generoiSeuraava();
 	}
 
+	/**
+	 * Asiakas-siirretaan palvelupisteelta toiselle.
+	 * 
+	 * @param t Tapahtuma, jota kasitellaan
+	 */
 	@Override
 	protected void suoritaTapahtuma(Tapahtuma t) {
 		Asiakas a;
@@ -48,70 +117,110 @@ public class OmaVarasto extends Varasto {
 
 		case Saapuminen:
 			palvelupisteet[0].lisaaJonoon(new Asiakas());
+			kontrolleri.visualisoiAsiakasSaapumis();
 			saapumisprosessi.generoiSeuraava();
 
 			break;
 		case Vastaanotto:
 			int counter = 0;
-			for(int i = 0; i<Palvelupiste.työntekijäLKM; i++) {
-				if(!työntekijät[i].onVarattu() && palvelupisteet[0].onJonossa()) {
+			for (int i = 0; i < tyontekijaLKM; i++) {
+				if (!tyontekijat[i].onVarattu() && palvelupisteet[0].onJonossa()) {
 					a = palvelupisteet[0].otaJonosta();
-					työntekijät[i].lisaaJonoon(a);
-				}else {
+					tyontekijat[i].lisaaJonoon(a);
+					
+					try (Session istunto = istuntotehdas.openSession()){
+						istunto.beginTransaction();
+						istunto.saveOrUpdate(a);
+						istunto.getTransaction().commit();
+						istunto.close();
+					} catch (Exception e) {
+						if(istunto.getTransaction()!=null)
+							istunto.beginTransaction().rollback();
+						System.err.print("Työntekijän tallentaminen ei onnistunut " + e);
+						e.printStackTrace();
+					}
+					
+				} else {
 					counter++;
 				}
 			}
-			if(counter == Palvelupiste.työntekijäLKM) {
-				System.out.println("Jokainen työntekijä on varattu");
-				tapahtumalista.lisaa(new Tapahtuma(TapahtumanTyyppi.Vastaanotto, Kello.getInstance().getAika()+Math.random()));
+			if (counter == tyontekijaLKM) {
+				System.out.println("Kaikki ty�ntekij�t ovat varattuja");
+				tapahtumalista.lisaa(
+						new Tapahtuma(TapahtumanTyyppi.Vastaanotto, Kello.getInstance().getAika() + Math.random()));
 			}
 			break;
-		case Työntekijä1:
+		case Tyontekija1:
 
-			a = työntekijät[0].otaJonosta();
+			a = tyontekijat[0].otaJonosta();
 			palvelupisteet[1].lisaaJonoon(a);
+			kontrolleri.visualisoiAsiakasPoistoJonosta1();
+			kontrolleri.visualisoiAsiakasHyllytys();
 			break;
-		case Työntekijä2:
+		case Tyontekija2:
 
-			a = työntekijät[1].otaJonosta();
+			a = tyontekijat[1].otaJonosta();
 			palvelupisteet[1].lisaaJonoon(a);
+			kontrolleri.visualisoiAsiakasPoistoJonosta1();
+			kontrolleri.visualisoiAsiakasHyllytys();
 			break;
-		case Työntekijä3:
+		case Tyontekija3:
 
-			a = työntekijät[2].otaJonosta();
+			a = tyontekijat[2].otaJonosta();
 			palvelupisteet[1].lisaaJonoon(a);
+			kontrolleri.visualisoiAsiakasPoistoJonosta1();
+			kontrolleri.visualisoiAsiakasHyllytys();
 			break;
-		case Työntekijä4:
+		case Tyontekija4:
 
-			a = työntekijät[3].otaJonosta();
+			a = tyontekijat[3].otaJonosta();
 			palvelupisteet[1].lisaaJonoon(a);
+			kontrolleri.visualisoiAsiakasPoistoJonosta1();
+			kontrolleri.visualisoiAsiakasHyllytys();
 			break;
-		case Työntekijä5:
+		case Tyontekija5:
 
-			a = työntekijät[4].otaJonosta();
+			a = tyontekijat[4].otaJonosta();
 			palvelupisteet[1].lisaaJonoon(a);
+			kontrolleri.visualisoiAsiakasPoistoJonosta1();
+			kontrolleri.visualisoiAsiakasHyllytys();
 			break;
-		case Työntekijä6:
+		case Tyontekija6:
 
-			a = työntekijät[5].otaJonosta();
+			a = tyontekijat[5].otaJonosta();
 			palvelupisteet[1].lisaaJonoon(a);
+			kontrolleri.visualisoiAsiakasPoistoJonosta1();
+			kontrolleri.visualisoiAsiakasHyllytys();
 			break;
-		case Työntekijä7:
+		case Tyontekija7:
 
-			a = työntekijät[6].otaJonosta();
+			a = tyontekijat[6].otaJonosta();
 			palvelupisteet[1].lisaaJonoon(a);
+			kontrolleri.visualisoiAsiakasPoistoJonosta1();
+			kontrolleri.visualisoiAsiakasHyllytys();
 			break;
-		case Työntekijä8:
+		case Tyontekija8:
 
-			a = työntekijät[7].otaJonosta();
+			a = tyontekijat[7].otaJonosta();
 			palvelupisteet[1].lisaaJonoon(a);
+			kontrolleri.visualisoiAsiakasPoistoJonosta1();
+			kontrolleri.visualisoiAsiakasHyllytys();
 			break;
 		case Hyllytys:
 			b = palvelupisteet[1].otaTilausJonosta();
+			for (Asiakas asiakas : b) {
+				kontrolleri.visualisoiAsiakasPoistoJonosta2();
+				kontrolleri.visualisoiAsiakasKeräys();
+			}
 			palvelupisteet[2].lisaaTilausJonoon(b);
+
 			break;
 		case Keräily:
 			b = palvelupisteet[2].otaTilausJonosta();
+			for (Asiakas asiakas : b) {
+				kontrolleri.visualisoiAsiakasPoistoJonosta3();
+				kontrolleri.visualisoiAsiakasPostitus();
+			}
 			palvelupisteet[3].lisaaTilausJonoon(b);
 
 			break;
@@ -120,14 +229,62 @@ public class OmaVarasto extends Varasto {
 			for (Asiakas asiakas : b) {
 				asiakas.setPoistumisaika(Kello.getInstance().getAika());
 				asiakas.raportti();
+				// Visualisoi asiakkaan poistumisen
+				kontrolleri.visualisoiAsiakasPoistoJonosta4();
+				kontrolleri.visualisoiAsiakasLähtee();
+				
+				try (Session istunto = istuntotehdas.openSession()){
+					istunto.beginTransaction();
+					istunto.saveOrUpdate(asiakas);
+					istunto.getTransaction().commit();
+					istunto.close();
+				} catch (Exception e) {
+					if(istunto.getTransaction()!=null)
+						istunto.beginTransaction().rollback();
+					System.err.print("Asiakkaan tallentaminen ei onnistui " + e);
+					e.printStackTrace();
+				}
+			}
+		}
+		
+		for (int i = 0;i<palvelupisteet.length;i++) {
+			try (Session istunto = istuntotehdas.openSession()){
+				istunto.beginTransaction();
+				istunto.saveOrUpdate(palvelupisteet[i]);
+				istunto.getTransaction().commit();
+				istunto.close();
+			} catch (Exception e) {
+				if(istunto.getTransaction()!=null)
+					istunto.beginTransaction().rollback();
+				System.err.print("Palvelupisteen tallentaminen ei onnistunut " + e);
+				e.printStackTrace();
+			}
+		}
+		for (int i = 0;i<tyontekijat.length;i++) {
+			try (Session istunto = istuntotehdas.openSession()){
+				istunto.beginTransaction();
+				istunto.saveOrUpdate(tyontekijat[i]);
+				istunto.getTransaction().commit();
+				istunto.close();
+			} catch (Exception e) {
+				if(istunto.getTransaction()!=null)
+					istunto.beginTransaction().rollback();
+				System.err.print("Työntekijän tallentaminen ei onnistunut " + e);
+				e.printStackTrace();
 			}
 		}
 	}
 
+	/**
+	 * Naytetaan kayttajalle simulaatiotuloksia.
+	 */
 	@Override
 	public void tulokset() {
-		System.out.println("\nSimulointi päättyi kello " + Kello.getInstance().getAika());
-		System.out.println("Tulokset ... puuttuvat vielä");
+		kontrolleri.naytaLoppuaika(Kello.getInstance().getAika());
+		kontrolleri.naytaPakettienMaaraSaapuneet(tilastot.getSaapuneidenMaara()-1);
+		kontrolleri.naytaPakettienMaaraLahteneet((int)tilastot.getCounter());
+		kontrolleri.naytaPakettienAikaViipyi(tilastot.getKeskimaarainenAika());
+		istuntotehdas.close();
 	}
 
 }

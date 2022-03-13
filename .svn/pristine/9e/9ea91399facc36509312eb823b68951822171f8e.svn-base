@@ -1,0 +1,123 @@
+package controller;
+
+import javafx.application.Platform;
+import framework.IVarasto;
+import model.OmaVarasto;
+import view.ISimulaattorinUI;
+
+public class Kontrolleri implements IKontrolleriVtoM, IKontrolleriMtoV{   // UUSI
+	
+	private IVarasto moottori; 
+	private ISimulaattorinUI ui;
+	
+	public Kontrolleri(ISimulaattorinUI ui) {
+		this.ui = ui;
+	}
+
+	
+	// Moottorin ohjausta:
+		
+	@Override
+	public void kaynnistaSimulointi() {
+		moottori = new OmaVarasto(this); // luodaan uusi moottorisäie jokaista simulointia varten
+		moottori.setSimulointiaika(ui.getAika());
+		moottori.setViive(ui.getViive());
+		moottori.setTyontekijaLKM(ui.getTyontekijoidenLKM());
+		ui.getVisualisointi().tyhjennaNaytto();
+		((Thread)moottori).start();
+		//((Thread)moottori).run(); // Ei missään tapauksessa näin. Miksi?
+	}
+	
+	@Override
+	public void hidasta() { // hidastetaan moottorisäiettä
+		moottori.setViive((long)(moottori.getViive()*1.10));
+	}
+
+	@Override
+	public void nopeuta() { // nopeutetaan moottorisäiettä
+		moottori.setViive((long)(moottori.getViive()*0.9));
+	}
+	
+	
+	
+	// Simulointitulosten välittämistä käyttöliittymään.
+	// Koska FX-ui:n päivitykset tulevat moottorisäikeestä, ne pitää ohjata JavaFX-säikeeseen:
+		
+	@Override
+	public void naytaLoppuaika(double aika) {
+		Platform.runLater(()->ui.setLoppuaika(aika)); 
+	}
+
+	@Override
+	public void visualisoiAsiakasSaapumis() {
+		Platform.runLater(new Runnable(){
+			public void run(){
+				ui.getVisualisointi().pakettiSaapuu();
+			}
+		});
+	}
+	
+	@Override
+	public void visualisoiAsiakasHyllytys() {
+		Platform.runLater(new Runnable(){
+			public void run(){
+				ui.getVisualisointi().pakettiHyllytys();
+			}
+		});
+	}
+	
+	@Override
+	public void visualisoiAsiakasPoistoJonosta1() {
+		Platform.runLater(new Runnable(){
+			public void run(){
+				ui.getVisualisointi().pakettiPoistuuJonosta1();
+			}
+		});
+	}
+	
+	@Override
+	public void visualisoiAsiakasKeräys() {
+		Platform.runLater(new Runnable(){
+			public void run(){
+				ui.getVisualisointi().pakettiKeräys();
+			}
+		});
+	}
+	 
+	@Override
+	public void visualisoiAsiakasPoistoJonosta2() {
+		Platform.runLater(new Runnable(){
+			public void run(){
+				ui.getVisualisointi().pakettiPoistuuJonosta2();
+			}
+		});
+	}
+	
+	@Override
+	public void visualisoiAsiakasPoistuu() {
+		Platform.runLater(new Runnable(){
+			public void run(){
+				ui.getVisualisointi().pakettiPoistuu();
+			}
+		});
+	}
+	
+	@Override
+	public void visualisoiAsiakasPoistoJonosta3() {
+		Platform.runLater(new Runnable(){
+			public void run(){
+				ui.getVisualisointi().pakettiPoistuuJonosta3();
+			}
+		});
+	}
+
+
+	@Override
+	public void tyontekijaLKM() {
+		moottori.setTyontekijaLKM(ui.getTyontekijoidenLKM());
+		
+	}
+
+
+
+}

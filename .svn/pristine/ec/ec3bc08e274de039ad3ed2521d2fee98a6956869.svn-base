@@ -1,0 +1,21 @@
+package model;
+
+// TODO:
+// Tapahtumien tyypit määritellään simulointimallin vaatimusten perusteella
+public enum TapahtumanTyyppi {
+	Saapuminen,
+	Vastaanotto,
+	Hyllytys,
+	Keräily,
+	Postitus,
+	Tyontekija1,
+	Tyontekija7,
+	Tyontekija6,
+	Tyontekija5,
+	Tyontekija4,
+	Tyontekija3,
+	Tyontekija2,
+	Tyontekija8
+	
+
+}
